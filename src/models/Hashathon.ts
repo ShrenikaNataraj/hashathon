@@ -2,13 +2,14 @@
 import { Model, Optional } from 'sequelize';
 import { IModalHashathon as HashathonModelAttributes } from '../types';
 
-export interface CategoryInput extends Optional<HashathonModelAttributes, 'hashId'> {}
+export interface HashathonInput
+  extends Optional<HashathonModelAttributes, 'hashId'> {}
 
-export interface CategoryOutput extends Required<HashathonModelAttributes> {}
+export interface HashathonOutput extends Required<HashathonModelAttributes> {}
 
 module.exports = (sequelize: any, DataTypes: any) => {
   class Hashathon
-    extends Model<HashathonModelAttributes, CategoryInput>
+    extends Model<HashathonModelAttributes, HashathonInput>
     implements HashathonModelAttributes
   {
     name!: string;
@@ -24,7 +25,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this   method automatically.
      */
-    
+
     static associate() {
       // define association here
     }
@@ -65,7 +66,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
       isOpenForRegistration: {
         allowNull: false,
         type: DataTypes.BOOLEAN,
-      }
+      },
     },
     {
       sequelize,

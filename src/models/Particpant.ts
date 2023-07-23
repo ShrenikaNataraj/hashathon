@@ -5,7 +5,7 @@ import { IModalParticipant as ParticipantAttributes } from '../types';
 export interface ParticipantInput
   extends Optional<ParticipantAttributes, 'pId'> {}
 
-export interface OrderItemOutput extends ParticipantAttributes {}
+export interface EmployeeOutput extends ParticipantAttributes {}
 
 module.exports = (sequelize: any, DataTypes: any) => {
   class Participant

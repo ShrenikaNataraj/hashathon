@@ -5,7 +5,7 @@ import { IModalEmployee as EmployeeAttributes } from '../types';
 export interface EmployeeInput
   extends Optional<EmployeeAttributes, 'uId'> {}
 
-export interface OrderDetailsOutput extends Required<EmployeeAttributes> {}
+export interface EmployeeOutput extends Required<EmployeeAttributes> {}
 
 module.exports = (sequelize: any, DataTypes: any) => {
   class EmployeeDetails
