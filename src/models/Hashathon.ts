@@ -14,12 +14,22 @@ module.exports = (sequelize: any, DataTypes: any) => {
   {
     name!: string;
     hashId!: number;
-    startDate!: string;
-    endDate!: string;
+    startDate!: Date;
+    endDate!: Date;
     hostedBy!: string;
     allowedSlots!: number;
     remainingSlots!: number;
-    isOpenForRegistration!: boolean;
+    participants!: number[];
+    // ... other fields ...
+
+    public isOpenForRegistration(): boolean {
+      const currentDate = new Date();
+      return (
+        currentDate >= this.startDate &&
+        currentDate <= this.endDate &&
+        this.participants.length < this.allowedSlots
+      );
+    }
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -63,9 +73,10 @@ module.exports = (sequelize: any, DataTypes: any) => {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      isOpenForRegistration: {
+      participants: {
+        type: DataTypes.ARRAY(DataTypes.INTEGER),
         allowNull: false,
-        type: DataTypes.BOOLEAN,
+        defaultValue: [],
       },
     },
     {

@@ -1,15 +1,15 @@
 'use strict';
 import { Model, Optional } from 'sequelize';
 import { IModalEmployee as EmployeeAttributes } from '../types';
-
-export interface EmployeeInput
-  extends Optional<EmployeeAttributes, 'uId'> {}
+import db from '../models/index';
+export interface EmployeeInput extends Optional<EmployeeAttributes, 'uId'> {}
 
 export interface EmployeeOutput extends Required<EmployeeAttributes> {}
 
 module.exports = (sequelize: any, DataTypes: any) => {
-  class EmployeeDetails
-    extends Model<EmployeeAttributes,EmployeeInput >
+  const { Hackathon } = db;
+  class Employee
+    extends Model<EmployeeAttributes, EmployeeInput>
     implements EmployeeAttributes
   {
     uId!: number;
@@ -17,25 +17,31 @@ module.exports = (sequelize: any, DataTypes: any) => {
     lastName!: string;
     email!: string;
     password!: string;
+    hackathonRegistrations!: number[]; // Array of Hackathon IDs the employee registered for
+    hackathonParticipations!: number[];
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    
+    public async getParticipatedHackathons() {
+      return await Hackathon.findAll({
+        where: { id: this.hackathonParticipations },
+      });
+    }
 
     static associate() {
       // define association here
     }
   }
-  EmployeeDetails.init(
+  Employee.init(
     {
       uId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
-        field:'u_id'
+        field: 'u_id',
       },
       email: {
         type: DataTypes.STRING,
@@ -49,14 +55,24 @@ module.exports = (sequelize: any, DataTypes: any) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      firstName:{
+      firstName: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      lastName:{
+      lastName: {
         type: DataTypes.STRING,
         allowNull: false,
-      }
+      },
+      hackathonRegistrations: {
+        type: DataTypes.ARRAY(DataTypes.INTEGER),
+        allowNull: false,
+        defaultValue: [],
+      },
+      hackathonParticipations: {
+        type: DataTypes.ARRAY(DataTypes.INTEGER),
+        allowNull: false,
+        defaultValue: [],
+      },
     },
     {
       sequelize,
@@ -66,5 +82,5 @@ module.exports = (sequelize: any, DataTypes: any) => {
       freezeTableName: true,
     }
   );
-  return EmployeeDetails;
+  return Employee;
 };

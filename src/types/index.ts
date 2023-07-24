@@ -1,12 +1,14 @@
+import { Request } from 'express';
+
 export interface IModalHashathon {
   hashId: number;
   name: string;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
   hostedBy: string;
   allowedSlots: number;
   remainingSlots: number;
-  isOpenForRegistration: boolean;
+  participants: number[];
 }
 
 export interface IModalEmployee {
@@ -15,6 +17,8 @@ export interface IModalEmployee {
   lastName: string;
   email: string;
   password: string;
+  hackathonRegistrations: number[];
+  hackathonParticipations: number[];
 }
 
 export interface IModalParticipant {
@@ -29,4 +33,8 @@ export enum StatusCodes {
   NOT_FOUND = 404,
   SERVER_ERROR = 500,
   USER_ERROR = 400,
+}
+
+export interface IGetUserAuthInfoRequest extends Request {
+  employee: string; // or any other type
 }
