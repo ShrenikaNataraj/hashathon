@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import db from './models';
 import dotenv from 'dotenv';
+import router from './routes';
+
 
 const PORT = process.env.PORT || 3000;
 
@@ -22,3 +24,5 @@ db.sequelize.sync().then(() => {
     console.log(`App listening on port ${PORT}`);
   });
 });
+
+app.use('/api', router);

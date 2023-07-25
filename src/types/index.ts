@@ -6,9 +6,11 @@ export interface IModalHashathon {
   startDate: Date;
   endDate: Date;
   hostedBy: string;
-  allowedSlots: number;
-  remainingSlots: number;
+  slots: number;
   participants: number[];
+  regEndDate: Date;
+  regStartDate: Date;
+  minRequirement: [string, number];
 }
 
 export interface IModalEmployee {
@@ -19,6 +21,8 @@ export interface IModalEmployee {
   password: string;
   hackathonRegistrations: number[];
   hackathonParticipations: number[];
+  techStack: string;
+  experience: number;
 }
 
 export interface IModalParticipant {
@@ -36,5 +40,14 @@ export enum StatusCodes {
 }
 
 export interface IGetUserAuthInfoRequest extends Request {
-  employee: string; // or any other type
+  employee?: Record<string, any>; // or any other type
 }
+
+export interface IPaginateReturnValue {
+  previousPage: number | null;
+  currentPage: number;
+  nextPage: number | null;
+  total: number;
+  limit: number;
+  data: IModalHashathon[];
+} 

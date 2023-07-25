@@ -1,15 +1,16 @@
-import { Request, Response } from 'express';
+import { raw, Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import db from '../models/index';
+import { SECRET_KEY } from '../config/config';
 
 export const registerEmployee = async (req: Request, res: Response) => {
-  const { Employee } = db;
   try {
-    const { name, email, password } = req.body;
+    const { firstName, lastName, email, password, techStack, experience } =
+      req.body;
 
     // Check if the email is already registered
-    const existingEmployee = await Employee.findOne({ where: { email } });
+    const existingEmployee = await db.Employee.findOne({ where: { email } });
     if (existingEmployee) {
       return res.status(400).json({ message: 'Email already registered' });
     }
@@ -19,28 +20,29 @@ export const registerEmployee = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create the new employee
-    const newEmployee = await Employee.create({
-      name,
+    const newEmployee = await db.Employee.create({
+      firstName,
+      lastName,
       email,
       password: hashedPassword,
+      techStack,
+      experience,
     });
 
     return res
       .status(201)
       .json({ message: 'Registration successful', employee: newEmployee });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
 export const loginEmployee = async (req: Request, res: Response) => {
-  const { Employee } = db;
   try {
     const { email, password } = req.body;
 
     // Find the employee by email
-    const employee = await Employee.findOne({ where: { email } });
+    const employee = await db.Employee.findOne({ where: { email }, raw: true });
 
     if (!employee) {
       return res.status(404).json({ message: 'Employee not found' });
@@ -54,7 +56,7 @@ export const loginEmployee = async (req: Request, res: Response) => {
     }
 
     // Generate a JWT token
-    const token = jwt.sign({ id: employee.id }, SECRET_KEY, {
+    const token = jwt.sign({ id: employee.uId }, SECRET_KEY, {
       expiresIn: '1h',
     });
 

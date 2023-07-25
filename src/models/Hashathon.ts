@@ -17,17 +17,18 @@ module.exports = (sequelize: any, DataTypes: any) => {
     startDate!: Date;
     endDate!: Date;
     hostedBy!: string;
-    allowedSlots!: number;
-    remainingSlots!: number;
+    slots!: number;
     participants!: number[];
-    // ... other fields ...
+    minRequirement!: [string, number];
+    regStartDate!: Date;
+    regEndDate!: Date;
 
     public isOpenForRegistration(): boolean {
       const currentDate = new Date();
       return (
-        currentDate >= this.startDate &&
-        currentDate <= this.endDate &&
-        this.participants.length < this.allowedSlots
+        currentDate >= this.regStartDate &&
+        currentDate <= this.regEndDate &&
+        this.participants.length < this.slots
       );
     }
     /**
@@ -53,30 +54,42 @@ module.exports = (sequelize: any, DataTypes: any) => {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      allowedSlots: {
+      slots: {
         allowNull: false,
         type: DataTypes.INTEGER,
       },
-      remainingSlots: {
-        allowNull: false,
-        type: DataTypes.INTEGER,
-      },
-      endDate: {
+      regEndDate: {
         allowNull: false,
         type: DataTypes.STRING,
+        field: 'reg_end_date',
       },
-      startDate: {
+      regStartDate: {
         allowNull: false,
         type: DataTypes.STRING,
+        field: 'reg_start_date',
       },
       hostedBy: {
         allowNull: false,
         type: DataTypes.STRING,
+        field: 'hosted_by',
       },
       participants: {
         type: DataTypes.ARRAY(DataTypes.INTEGER),
         allowNull: false,
         defaultValue: [],
+      },
+      startDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      endDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      minRequirement: {
+        allowNull: false,
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        field: 'min_requirements',
       },
     },
     {
